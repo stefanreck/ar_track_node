@@ -9,7 +9,6 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from pprint import pprint
 
-printy = False
 
 def pose_callback(msg):
     global printy
@@ -20,15 +19,7 @@ def pose_callback(msg):
                 if tf_listener.frameExists(marker_frame):
                     t = tf_listener.getLatestCommonTime("camera", marker_frame)
                     tf_listener.waitForTransform("camera", marker_frame, t, rospy.Duration(4.0))
-                    # (trans1,rot1) = tf_listener.lookupTransform("camera", marker_frame, t)
                     (trans1,rot1) = tf_listener.lookupTransform(marker_frame, "camera", t)
-                    if printy:
-                        print(repr(trans1))
-                        print("Found marker " + str(m.id) + ". Could transform")
-                        # printy = False
-                        pprint(m.pose)
-                        pprint(trans1)
-                        pprint(rot1)
                     publish_odom("camera", trans1, rot1)
 
 
@@ -44,15 +35,11 @@ def publish_odom(frame, trans, rot):
     odom_pub.publish(msg)
 
 
-
-
 rospy.init_node("ar_track_vis")
 odom_pub = rospy.Publisher("odom", Odometry, queue_size=50)
 odom_broadcaster = tf.TransformBroadcaster()
 
 pose_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, pose_callback)
-# vis_sub = rospy.Subscriber("/visualization_marker", Marker, vis_callback)
-
 tf_listener = tf.TransformListener()
 
 rospy.spin()
