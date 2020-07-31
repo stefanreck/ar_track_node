@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- 
+		Starts publishing the video and ar_track_alvar to analyse AR codes.
+		All parameters that can be passed to video_publisher or ar_track can also be passed to 
+		this launch file
+	-->
+	<include file="$(find ar_track_node)/launch/video_publisher.launch" pass_all_args="true"/>
+
+	<include file="$(find ar_track_node)/launch/ar_track.launch" pass_all_args="true"/>
+</launch>
